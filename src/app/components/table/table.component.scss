@@ -1,0 +1,32 @@
+.table-wrapper {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+
+  table {
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  td {
+    width: 40px;
+    height: 40px;
+    border: 1px solid black;
+    background-color: blue;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  td.active {
+    background-color: yellow;
+  }
+
+  td.success {
+    background-color: green;
+  }
+
+  td.failed {
+    background-color: red;
+  }
+}

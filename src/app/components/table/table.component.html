@@ -1,0 +1,12 @@
+<div class="table-wrapper">
+    <table>
+        <tr *ngFor="let row of tableGridData; let i = index; trackBy: trackByRow">
+            <td *ngFor="let cell of row; let j = index; trackBy: trackByCell" (click)="onCellClick(i, j)" [ngClass]="{
+                'active': cell === CellStatus.Active,
+                'success': cell === CellStatus.Success,
+                'failed': cell === CellStatus.Failed
+            }">
+            </td>
+        </tr>
+    </table>
+</div>

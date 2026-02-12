@@ -1,0 +1,23 @@
+<div class="controls-holder">
+    <button [disabled]="delayControl?.invalid" (click)="onStartSkip()">{{ btnLabel }}</button>
+
+    <form [formGroup]="form">
+        <label for="delay">Delay (ms):</label>
+        <div>
+            <input type="text" id="delay" formControlName="delayControl"   
+                placeholder="From {{ minDelayValue }} to {{ maxDelayValue }}" (keypress)="allowDigits($event)" />
+            <div *ngIf="delayControl?.invalid && delayControl?.touched" class="error-messages">
+                <div *ngIf="delayControl?.errors?.['required']">
+                    Number is required
+                </div>
+                <div *ngIf="delayControl?.errors?.['min']">
+                    Must be at least {{ minDelayValue }}
+                </div>
+                <div *ngIf="delayControl?.errors?.['max']">
+                    Must be not more than {{ maxDelayValue }}
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>

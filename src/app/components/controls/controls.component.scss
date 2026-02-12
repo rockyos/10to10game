@@ -1,0 +1,25 @@
+.controls-holder {
+    display: flex;
+    justify-content: space-between;
+    height: 50px;
+    margin: 25px;
+
+    button {
+        padding: 5px 10px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    input {
+        width: 150px;
+        padding: 5px;
+        font-size: 16px;
+        text-align: center;
+    }
+
+    .error-messages {
+        color: red;
+        font-size: 14px;
+        margin-top: 3px;
+    }
+}

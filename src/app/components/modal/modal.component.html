@@ -1,0 +1,14 @@
+<div *ngIf="isOpen" class="modal-background">
+    <div class="modal-window">
+        <div class="modal-header">
+            <button class="close-btn" (click)="onClose()">
+                <span aria-hidden="true">&#10006;</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <ng-content></ng-content>
+            <button class="ok-btn" (click)="onClose()">Ok</button>
+        </div>
+    </div>
+</div>

@@ -1,1 +1,24 @@
-/* You can add global styles to this file, and also import other style files */
+html {
+    background-image: url("../src/assets/images/back-ground.jpg");
+}
+
+body {
+    margin: 25px;
+}
+
+main {
+    width: 100%;
+    min-height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: inherit;
+    position: relative;
+}
+
+.content {
+    display: inline-block;
+    text-align: center;
+    max-width: 600px;
+    margin-bottom: 3rem;
+}

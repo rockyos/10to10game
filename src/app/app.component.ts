@@ -1,12 +1,127 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, ViewChild } from '@angular/core';
+import { TableComponent } from './components/table/table.component';
+import { ControlsComponent } from './components/controls/controls.component';
+import { GameStatus } from './interfaces/game-status';
+import { Score } from './interfaces/score';
+import { CellCoordinates } from './interfaces/cell-coordinates';
+import { CellStatus } from './enums/cell-status.enum';
+import { ModalComponent } from './components/modal/modal.component';
+import { Winner } from './enums/winner.enum';
+import { SoundService } from './Services/sound.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [TableComponent, ControlsComponent, ModalComponent, CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'test-task-app';
+  tableSize = 10;
+  winScore = 10;
+  currentScore: Score = { player: 0, computer: 0 };
+  gameStatus: GameStatus = { isActive: false };
+  currentActiveCell: CellCoordinates | null = null;
+  winner: Winner | null = null;
+  Winner = Winner;
+  timeoutId: any;
+  tableGridData: CellStatus[][] = [];
+  isModalOpen = false;
+  @ViewChild('controls') controlsComponent!: ControlsComponent;
+  constructor(private soundService: SoundService) {
+    this.initTableCells();
+  }
+
+  initTableCells() {
+    this.tableGridData = Array.from({ length: this.tableSize }, () =>
+      Array(this.tableSize).fill(CellStatus.NotSelected)
+    );
+  }
+
+  resetScore() {
+    this.currentScore = { player: 0, computer: 0 };
+    this.winner = null;
+  }
+
+  gameStatusChanged(event: GameStatus) {
+    this.gameStatus = event;
+    this.resetScore();
+    this.initTableCells();
+    if (this.gameStatus.isActive) {
+      this.soundService.LetsGo();
+      this.nextTry();
+    }
+  }
+
+  nextTry() {
+    if (this.currentActiveCell) {
+      const { row, col } = this.currentActiveCell;
+      if (this.tableGridData[row][col] === CellStatus.Active) {
+        this.tableGridData[row][col] = CellStatus.Failed;
+        this.currentScore.computer += 1;
+      }
+    }
+
+    if (this.checkIsGameOver()) return;
+
+    this.currentActiveCell = this.createUniqueRandomCell();
+    const { row, col } = this.currentActiveCell;
+
+    this.timeoutId = setTimeout(() => {
+      if (this.tableGridData[row][col] === CellStatus.Active) {
+        this.tableGridData[row][col] = CellStatus.Failed;
+        this.currentScore.computer += 1;
+        this.nextTry();
+      }
+    }, this.gameStatus.delay);
+  }
+
+  checkIsGameOver() {
+    if (this.currentScore.player >= this.winScore || this.currentScore.computer >= this.winScore) {
+      this.gameStatus.isActive = false;
+      this.winner = this.currentScore.player >= this.winScore ? Winner.Player : Winner.Computer;
+      this.openModal();
+      this.winner === Winner.Player ? this.soundService.Success() : this.soundService.Failed();
+      return true;
+    }
+    return false;
+  }
+
+  getRandomNumber(){
+    return Math.floor(Math.random() * this.tableSize);
+  }
+
+  createUniqueRandomCell() {
+    while (true) {
+      const { row, col } = {
+        row: this.getRandomNumber(),
+        col: this.getRandomNumber()
+      };
+      if (this.tableGridData[row][col] === CellStatus.NotSelected) {
+        this.tableGridData[row][col] = CellStatus.Active;
+        return { row, col };
+      }
+    }
+  }
+
+  handleCellClick(coords: CellCoordinates) {
+    if (this.gameStatus.isActive) {
+      const { row, col } = coords;
+      if (this.tableGridData[row][col] === CellStatus.Active) {
+        this.tableGridData[row][col] = CellStatus.Success;
+        this.currentScore.player += 1;
+        clearTimeout(this.timeoutId);
+        this.nextTry();
+      }
+    }
+  }
+
+  openModal() {
+    this.isModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+    this.controlsComponent.onStartSkip()
+  }
 }

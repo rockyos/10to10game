@@ -1,0 +1,29 @@
+.score-holder {
+    span {
+        font-size: 32px;
+        margin: 10px;
+    }
+}
+
+.modal-content {
+    p {
+        font-size: 36px;
+        margin: 10px;
+        font-weight: bold;
+    }
+
+    .modal-img {
+        height: 200px;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .loser {
+        background-image: url('../assets/images/loser.png');
+    }
+
+    .winner {
+        background-image: url('../assets/images/winner-human.png');
+
+    }
+}
