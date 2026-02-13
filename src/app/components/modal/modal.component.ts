@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { ModalService } from '../../Services/modal.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-modal',
@@ -8,16 +10,20 @@ import { Component, EventEmitter, HostListener, Input, Output } from '@angular/c
   styleUrl: './modal.component.scss'
 })
 export class ModalComponent {
-  @Input() isOpen = false;
+  isOpen$!: Observable<boolean>;
   @Output() close = new EventEmitter<void>();
+
+  constructor(private modalService: ModalService) {
+    this.isOpen$ = this.modalService.modalState$;
+  }
+
   @HostListener('document:keydown.escape')
   onEsc() {
-    if (this.isOpen) {
-      this.onClose();
-    }
+    this.onClose();
   }
 
   onClose() {
     this.close.emit();
+    this.modalService.close();
   }
 }

@@ -1,4 +1,4 @@
-<div *ngIf="isOpen" class="modal-background">
+<div *ngIf="isOpen$ | async" class="modal-background">
     <div class="modal-window">
         <div class="modal-header">
             <button class="close-btn" (click)="onClose()">

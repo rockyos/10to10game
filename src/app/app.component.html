@@ -19,7 +19,7 @@
 
     <app-controls #controls (gameStatusChanged)="gameStatusChanged($event)"></app-controls>
     <app-table [tableGridData]="tableGridData" (cellClicked)="handleCellClick($event)"></app-table>
-    <app-modal [isOpen]="isModalOpen" (close)="closeModal()">
+    <app-modal (close)="closeModal()">
       <div class="modal-content">
         <p>Winner: {{ winner }}</p>
         <p>Score: {{ currentScore.player }} vs {{ currentScore.computer }}</p>

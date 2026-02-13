@@ -9,6 +9,7 @@ import { ModalComponent } from './components/modal/modal.component';
 import { Winner } from './enums/winner.enum';
 import { SoundService } from './Services/sound.service';
 import { CommonModule } from '@angular/common';
+import { ModalService } from './Services/modal.service';
 
 @Component({
   selector: 'app-root',
@@ -26,9 +27,8 @@ export class AppComponent {
   Winner = Winner;
   timeoutId: any;
   tableGridData: CellStatus[][] = [];
-  isModalOpen = false;
   @ViewChild('controls') controlsComponent!: ControlsComponent;
-  constructor(private soundService: SoundService) {
+  constructor(private soundService: SoundService, private modalService: ModalService) {
     this.initTableCells();
   }
 
@@ -117,11 +117,10 @@ export class AppComponent {
   }
 
   openModal() {
-    this.isModalOpen = true;
+    this.modalService.open();
   }
 
   closeModal() {
-    this.isModalOpen = false;
     this.controlsComponent.onStartSkip()
   }
 }
