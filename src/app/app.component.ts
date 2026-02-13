@@ -18,27 +18,28 @@ import { ModalService } from './Services/modal.service';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  tableSize = 10;
-  winScore = 10;
+  private tableSize = 10;
+  private winScore = 10;
   currentScore: Score = { player: 0, computer: 0 };
   gameStatus: GameStatus = { isActive: false };
-  currentActiveCell: CellCoordinates | null = null;
+  private currentActiveCell: CellCoordinates | null = null;
   winner: Winner | null = null;
-  Winner = Winner;
-  timeoutId: any;
+  readonly Winner = Winner;
+  private timeoutId: any;
   tableGridData: CellStatus[][] = [];
   @ViewChild('controls') controlsComponent!: ControlsComponent;
+  
   constructor(private soundService: SoundService, private modalService: ModalService) {
     this.initTableCells();
   }
 
-  initTableCells() {
+  private initTableCells() {
     this.tableGridData = Array.from({ length: this.tableSize }, () =>
       Array(this.tableSize).fill(CellStatus.NotSelected)
     );
   }
 
-  resetScore() {
+  private resetScore() {
     this.currentScore = { player: 0, computer: 0 };
     this.winner = null;
   }
@@ -53,7 +54,7 @@ export class AppComponent {
     }
   }
 
-  nextTry() {
+  private nextTry() {
     if (this.currentActiveCell) {
       const { row, col } = this.currentActiveCell;
       if (this.tableGridData[row][col] === CellStatus.Active) {
@@ -76,7 +77,7 @@ export class AppComponent {
     }, this.gameStatus.delay);
   }
 
-  checkIsGameOver() {
+  private checkIsGameOver() {
     if (this.currentScore.player >= this.winScore || this.currentScore.computer >= this.winScore) {
       this.gameStatus.isActive = false;
       this.winner = this.currentScore.player >= this.winScore ? Winner.Player : Winner.Computer;
@@ -87,7 +88,7 @@ export class AppComponent {
     return false;
   }
 
-  getRandomNumber(){
+  private getRandomNumber(){
     return Math.floor(Math.random() * this.tableSize);
   }
 
@@ -116,7 +117,7 @@ export class AppComponent {
     }
   }
 
-  openModal() {
+  private openModal() {
     this.modalService.open();
   }
 

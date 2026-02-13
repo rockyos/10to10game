@@ -11,9 +11,9 @@ import { CellCoordinates } from '../../interfaces/cell-coordinates';
   styleUrl: './table.component.scss'
 })
 export class TableComponent {
-  CellStatus = CellStatus;
+  readonly CellStatus = CellStatus;
+  
   @Input() tableGridData: CellStatus[][] = [];
-
   @Output() cellClicked = new EventEmitter<CellCoordinates>();
 
 

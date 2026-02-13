@@ -11,7 +11,7 @@ import { SoundService } from '../../Services/sound.service';
   styleUrl: './controls.component.scss'
 })
 export class ControlsComponent {
-  isGameStarted = false;
+  private isGameStarted = false;
   minDelayValue = 500;
   maxDelayValue = 5000;
   form: FormGroup;
