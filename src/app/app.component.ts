@@ -61,7 +61,6 @@ export class AppComponent {
       if (this.tableGridData[row][col] === CellStatus.Active) {
         this.immutableUpdateTableCell(row, col, CellStatus.Failed);
         this.currentScore.computer += 1;
-        this.cdr.markForCheck();
       }
     }
 
@@ -74,7 +73,6 @@ export class AppComponent {
       if (this.tableGridData[row][col] === CellStatus.Active) {
         this.immutableUpdateTableCell(row, col, CellStatus.Failed);
         this.currentScore.computer += 1;
-        this.cdr.markForCheck();
         this.nextTry();
       }
     }, this.gameStatus.delay);
@@ -103,7 +101,6 @@ export class AppComponent {
       };
       if (this.tableGridData[row][col] === CellStatus.NotSelected) {
         this.immutableUpdateTableCell(row, col, CellStatus.Active);
-        this.cdr.markForCheck();
         return { row, col };
       }
     }
@@ -115,7 +112,6 @@ export class AppComponent {
       if (this.tableGridData[row][col] === CellStatus.Active) {
         this.immutableUpdateTableCell(row, col, CellStatus.Success);
         this.currentScore.player += 1;
-        this.cdr.markForCheck();
         clearTimeout(this.timeoutId);
         this.nextTry();
       }
@@ -128,6 +124,7 @@ export class AppComponent {
         ? rowTable.map((cell, cellIndex) => (cellIndex === col ? status : cell))
         : rowTable
     );
+    this.cdr.markForCheck();
   }
 
   private openModal() {
