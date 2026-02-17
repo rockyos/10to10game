@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GameStatus } from '../../interfaces/game-status';
 import { SoundService } from '../../Services/sound.service';
@@ -7,6 +7,7 @@ import { SoundService } from '../../Services/sound.service';
 @Component({
   selector: 'app-controls',
   imports: [CommonModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './controls.component.html',
   styleUrl: './controls.component.scss'
 })

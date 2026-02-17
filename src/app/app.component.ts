@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { TableComponent } from './components/table/table.component';
 import { ControlsComponent } from './components/controls/controls.component';
 import { GameStatus } from './interfaces/game-status';
@@ -14,12 +14,13 @@ import { ModalService } from './Services/modal.service';
 @Component({
   selector: 'app-root',
   imports: [TableComponent, ControlsComponent, ModalComponent, CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  private tableSize = 10;
-  private winScore = 10;
+  private readonly tableSize = 10;
+  private readonly winScore = 10;
   currentScore: Score = { player: 0, computer: 0 };
   gameStatus: GameStatus = { isActive: false };
   private currentActiveCell: CellCoordinates | null = null;
@@ -28,8 +29,8 @@ export class AppComponent {
   private timeoutId: any;
   tableGridData: CellStatus[][] = [];
   @ViewChild('controls') controlsComponent!: ControlsComponent;
-  
-  constructor(private soundService: SoundService, private modalService: ModalService) {
+
+  constructor(private soundService: SoundService, private modalService: ModalService, private cdr: ChangeDetectorRef) {
     this.initTableCells();
   }
 
@@ -58,8 +59,9 @@ export class AppComponent {
     if (this.currentActiveCell) {
       const { row, col } = this.currentActiveCell;
       if (this.tableGridData[row][col] === CellStatus.Active) {
-        this.tableGridData[row][col] = CellStatus.Failed;
+        this.immutableUpdateTableCell(row, col, CellStatus.Failed);
         this.currentScore.computer += 1;
+        this.cdr.markForCheck();
       }
     }
 
@@ -70,8 +72,9 @@ export class AppComponent {
 
     this.timeoutId = setTimeout(() => {
       if (this.tableGridData[row][col] === CellStatus.Active) {
-        this.tableGridData[row][col] = CellStatus.Failed;
+        this.immutableUpdateTableCell(row, col, CellStatus.Failed);
         this.currentScore.computer += 1;
+        this.cdr.markForCheck();
         this.nextTry();
       }
     }, this.gameStatus.delay);
@@ -88,7 +91,7 @@ export class AppComponent {
     return false;
   }
 
-  private getRandomNumber(){
+  private getRandomNumber() {
     return Math.floor(Math.random() * this.tableSize);
   }
 
@@ -99,7 +102,8 @@ export class AppComponent {
         col: this.getRandomNumber()
       };
       if (this.tableGridData[row][col] === CellStatus.NotSelected) {
-        this.tableGridData[row][col] = CellStatus.Active;
+        this.immutableUpdateTableCell(row, col, CellStatus.Active);
+        this.cdr.markForCheck();
         return { row, col };
       }
     }
@@ -109,12 +113,21 @@ export class AppComponent {
     if (this.gameStatus.isActive) {
       const { row, col } = coords;
       if (this.tableGridData[row][col] === CellStatus.Active) {
-        this.tableGridData[row][col] = CellStatus.Success;
+        this.immutableUpdateTableCell(row, col, CellStatus.Success);
         this.currentScore.player += 1;
+        this.cdr.markForCheck();
         clearTimeout(this.timeoutId);
         this.nextTry();
       }
     }
+  }
+
+  private immutableUpdateTableCell(row: number, col: number, status: CellStatus) {
+    this.tableGridData = this.tableGridData.map((rowTable, rowIndex) =>
+      rowIndex === row
+        ? rowTable.map((cell, cellIndex) => (cellIndex === col ? status : cell))
+        : rowTable
+    );
   }
 
   private openModal() {

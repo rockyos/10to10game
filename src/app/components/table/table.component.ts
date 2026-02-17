@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { CellStatus } from '../../enums/cell-status.enum';
-import { GameStatus } from '../../interfaces/game-status';
 import { CellCoordinates } from '../../interfaces/cell-coordinates';
 
 @Component({
   selector: 'app-table',
   imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss'
 })
@@ -18,11 +18,11 @@ export class TableComponent {
 
 
   trackByRow(index: number, row: any[]) {
-    return index;
+    return index + '-' + row.join(',');
   }
 
-  trackByCell(index: number, cell: any) {
-    return index;
+  trackByCell(index: number, cell: CellStatus) {
+    return index + '-' + cell ;
   }
 
   onCellClick(row: number, col: number) {
