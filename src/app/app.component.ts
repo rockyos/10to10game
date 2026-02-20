@@ -66,8 +66,7 @@ export class AppComponent {
 
     if (this.checkIsGameOver()) return;
 
-    this.currentActiveCell = this.createUniqueRandomCell();
-    const { row, col } = this.currentActiveCell;
+    const { row, col } = this.createUniqueRandomCell();
 
     this.timeoutId = setTimeout(() => {
       if (this.tableGridData[row][col] === CellStatus.Active) {
@@ -101,7 +100,8 @@ export class AppComponent {
       };
       if (this.tableGridData[row][col] === CellStatus.NotSelected) {
         this.immutableUpdateTableCell(row, col, CellStatus.Active);
-        return { row, col };
+        this.currentActiveCell = { row, col };
+        return this.currentActiveCell;
       }
     }
   }
